@@ -53,11 +53,11 @@ font = pygame.font.SysFont("Segoe UI", 18)
 # ENV + AGENT
 # =========================
 
-env = MazeEnv()
-agent = QLearningAgent()
+env = MazeEnv() #окруж
+agent = QLearningAgent() #ии
 
 try:
-    agent.load()
+    agent.load() #загрузка обученной модели
     print("Model loaded")
 except:
     print("No model found")
@@ -88,7 +88,7 @@ def draw_cell(r, c, color):
     )
 
 # =========================
-# LOOP
+# LOOP основной цикл
 # =========================
 
 running = True
@@ -98,7 +98,7 @@ while running:
     screen.fill(BG)
 
     # =====================
-    # EVENTS
+    # EVENTS обработка событий
     # =====================
 
     for event in pygame.event.get():
@@ -128,6 +128,7 @@ while running:
     # =====================
 
     for r in range(ROWS):
+        #2х цикл проходит и рисует клетки
         for c in range(COLS):
 
             color = PATH
@@ -141,7 +142,7 @@ while running:
             if (r, c) == env.goal:
                 color = GOAL
 
-            draw_cell(r, c, color)
+            draw_cell(r, c, color) #округление углов
 
     # =====================
     # AI STEP
@@ -151,9 +152,9 @@ while running:
 
         action = agent.choose_action(state)
 
-        next_state, reward, done = env.step(action)
+        next_state, reward, done = env.step(action) #окружение (env) сообщ где агент
 
-        agent.update(state, action, reward, next_state)
+        agent.update(state, action, reward, next_state) #анализирует результат
 
         state = next_state
 
@@ -165,7 +166,7 @@ while running:
     else:
 
         episodes += 1
-        agent.log_episode(episode_reward)
+        agent.log_episode(episode_reward) #сохранение данных в лог, камбек на старт
 
         episode_reward = 0
         steps = 0
@@ -221,7 +222,7 @@ while running:
         txt = font.render(line, True, TEXT)
         screen.blit(txt, (GRID_W + 30, 250 + i * 25))
 
-    pygame.display.update()
-    clock.tick(60)
+    pygame.display.update() #отрисовка общей картины
+    clock.tick(60) #FPS
 
 pygame.quit()
